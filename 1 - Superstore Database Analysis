@@ -37,8 +37,7 @@ ORDER BY price;
 
 #Query 2: Price structure comparison by product category
 #Shows average, min, and max prices and item count by category to compare pricing structures.
-SELECT
-    category,
+SELECT category,
     COUNT(*) AS item_count,
     ROUND(AVG(price), 2) AS avg_price,
     ROUND(MIN(price), 2) AS lowest_price,
@@ -50,9 +49,7 @@ ORDER BY avg_price DESC;
 
 #Query 3: Information for Kitchen Supplies category
 #Shows detailed breakdown for all category items, ordered by rating.
-SELECT 
-    item_id, 
-    item_name,
+SELECT item_id, item_name,
     ROUND(average_rating, 2) AS average_rating,
     ROUND(price * stock_quantity, 2) AS total_inventory_value,
     price,
@@ -63,9 +60,7 @@ ORDER BY average_rating DESC;
 
 #Query 4: What are the best value items (high rating relative to price)?
 #Identifies items that have strong ratings compared to price (good “value” products).
-SELECT
-    item_name,
-    category,
+SELECT item_name, category,
     ROUND(price, 2) AS price,
     ROUND(average_rating, 2) AS average_rating,
     ROUND(average_rating / price, 2) AS value_score
