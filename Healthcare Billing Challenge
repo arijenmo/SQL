@@ -1,4 +1,4 @@
-#This is a practice challenge to review intermediate SQL concepts (calculations and CASE expressions) using fictional patient billing records.
+#This is a practice challenge to review intermediate SQL concepts using fictional patient billing records.
 #In this dataset, each patient has been billed for a medical procedure (office visit, lab test, ECG, etc.).
 #https://www.db-fiddle.com/f/wXnoo4TfKvxYNPMhzNc1uh/0
 
@@ -47,3 +47,24 @@ FROM (
         payment_received / procedure_bill AS payment_fraction
     FROM billing
 ) AS b;
+
+#Query 5: Update Query 1 to review each patient ID and the sum of all their bills.
+SELECT patient_id, 
+SUM(procedure_bill - payment_received) AS payment_remaining
+FROM billing
+GROUP BY patient_id;
+
+#Query 6: Using HAVING expression to filter for bills over $150.
+SELECT patient_id,
+SUM(procedure_bill - payment_received) AS payment_remaining
+FROM billing
+GROUP BY patient_id
+HAVING payment_remaining > 150;
+
+#Query 6: Insurance companies that have billed more than 3 lab procedures. 
+SELECT insurance_provider,
+COUNT(procedure_bill) AS lab_bills
+FROM billing
+WHERE procedure_code LIKE '80%'
+GROUP BY insurance_provider
+HAVING COUNT(procedure_bill > 3);
