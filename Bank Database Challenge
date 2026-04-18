@@ -1,0 +1,68 @@
+#This is a review of intermediate SQL concepts in SQLite and utilizes the following bank for customer-facing analysis and recommendations. 
+#Intended Analytical Outcome: educate, advise, and make best recommendations on bank account option(s) for a new customer.
+#Source data: https://www.db-fiddle.com/f/eTz3R15sgXe7Ak2izPNrLG/0
+
+CREATE TABLE bank_products (
+    product_id INTEGER PRIMARY KEY,
+    product_name TEXT,
+    product_type TEXT,
+    interest_rate DECIMAL(5, 2),
+    monthly_fee DECIMAL(6, 2),
+    minimum_balance DECIMAL(10, 2),
+    description TEXT
+);
+
+INSERT INTO bank_products (product_id, product_name, product_type, interest_rate, monthly_fee, minimum_balance, description)
+VALUES
+(1, 'Basic Checking', 'Checking', 0.00, 5.00, 0.00, 'No minimum balance required.'),
+(2, 'Premium Checking', 'Checking', 0.00, 10.00, 1000.00, 'Offers additional benefits.'),
+(3, 'Business Checking', 'Checking', 0.00, 15.00, 5000.00, 'Designed for business needs.'),
+(4, 'Student Checking', 'Checking', 0.00, 3.00, 0.00, 'No minimum balance. Low monthly fee for students.'),
+(5, 'Basic Savings', 'Savings', 0.20, 0.00, 100.00, 'Offers competitive interest rates.'),
+(6, 'High Yield Savings', 'Savings', 1.00, 0.00, 5000.00, 'High interest rates for higher balances.'),
+(7, 'Student Savings', 'Savings', 0.20, 0.00, 0.00, 'No minimum balance. Low interest rate for students.'),
+(8, 'Senior Savings', 'Savings', 0.50, 0.00, 100.00, 'Designed for seniors.'),
+(9, 'Youth Savings', 'Savings', 0.30, 0.00, 10.00, 'Low minimum balance and interest rate suitable for young account holders.'),
+(10, 'Auto Loan', 'Loan', 4.00, 0.00, 0.00, 'Financing for new or used cars.'),
+(11, 'Mortgage', 'Loan', 3.50, 0.00, 0.00, 'Home mortgage loans.'),
+(12, 'Cash Back Rewards Card', 'Credit Card', 16.00, 5.00, 0.00, 'Offers cash back on purchases.'),
+(13, 'Platinum Credit Card', 'Credit Card', 18.00, 0.00, 0.00, 'Rewards and cash back.'),
+(14, 'Gold Credit Card', 'Credit Card', 20.00, 10.00, 0.00, 'Higher credit limits.'),
+(15, 'Student Credit Card', 'Credit Card', 22.00, 5.00, 0.00, 'Designed for students.')
+;
+
+#Query 1: Initial review of account options 
+# This query determines specific account product offerings the customer is interested in by reviewing all names and type categories.
+SELECT product_name, product_type,
+FROM bank_products;
+
+#Query 2: The customer from Query 1 confirmed their interest in opening a Checking or Savings account.
+#This query provides a relevant product offerings list based on the customer's interest preferences.
+SELECT product_name, product_type, description
+FROM bank_products
+WHERE product_type IN ('Checking', 'Savings');
+
+#Query 3: The same customer confirmed their desired account type and would like details. 
+#This query provides specific details about the Savings account options with an interest rate of 0.75 or higher and no monthly fee.
+SELECT product_name, interest_rate
+FROM bank_products
+WHERE product_type='Savings'
+AND interest_rate>=.75
+AND  monthly_fee =0;
+
+#Query 4: Reviews descriptions for specific product offerings using an IN() clause.
+#This query is seperate from queries 1-3.
+SELECT product_name, description
+FROM bank_products
+WHERE product_name IN('Premium Checking', 'High Yield Savings', 'Platinum Credit Card', 'Gold Credit Card');
+
+#Query 6: Utilizes LIKE function to identify details for a specific product offering, which starts with 'Business'.
+SELECT *
+FROM bank_products
+WHERE product_name LIKE 'bus%';
+
+#Query 7: Identify account options and details for product offerings that have the word "reward" in the name or description.
+SELECT *
+FROM bank_products
+WHERE product_name LIKE '%reward%'
+OR description LIKE '%reward%';
