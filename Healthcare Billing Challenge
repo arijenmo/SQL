@@ -1,0 +1,49 @@
+#This is a practice challenge to review intermediate SQL concepts (calculations and CASE expressions) using fictional patient billing records.
+#In this dataset, each patient has been billed for a medical procedure (office visit, lab test, ECG, etc.).
+#https://www.db-fiddle.com/f/wXnoo4TfKvxYNPMhzNc1uh/0
+
+#Query 1: Adding a new calculation column
+#This query returns all patient IDs and a new column calculating the remaining balance for each ID.
+SELECT patient_id
+, procedure_bill - payment_received
+AS payment_remaining
+FROM billing;
+
+#Query 2: What amount of their total bill has each patient paid so far? 
+#This query is for additional calculation practice on fractions, percentages, and conversions based on Query 1.
+SELECT patient_id
+, payment_received / procedure_bill AS payment_fraction
+, ROUND((payment_received / procedure_bill)*100, 1) AS payment_percent
+FROM billing;
+
+#Query 3: Using CASE expression - (3 payment status categories) 
+#CASE expression problem 1
+SELECT patient_id
+, payment_received / procedure_bill AS payment_fraction
+, CASE
+WHEN (payment_received / procedure_bill) = 1 THEN 'paid'
+WHEN (payment_received / procedure_bill) = 0 THEN 'no payment'
+ELSE 'in progress'
+END AS payment_status
+FROM billing
+;
+
+#Query 4: Using CASE expression - (5 payment status categories)
+#CASE expression problem 2
+SELECT 
+  b.patient_id,
+  b.payment_fraction,
+  CASE
+      WHEN b.payment_fraction = 1 THEN 'paid'
+      WHEN b.payment_fraction = 0 THEN 'no payment'
+      WHEN b.payment_fraction >= 0.75 THEN '75%+'
+      WHEN b.payment_fraction >= 0.50 THEN '50%+'
+      WHEN b.payment_fraction >= 0.25 THEN '25%+'
+      ELSE 'Under 25%'
+   END AS payment_status
+FROM (
+    SELECT
+        patient_id,
+        payment_received / procedure_bill AS payment_fraction
+    FROM billing
+) AS b;
