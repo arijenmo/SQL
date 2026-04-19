@@ -1,0 +1,49 @@
+-- Summary: Practice project to review intermediate SQL concepts in SQLite using a fictional dataset.
+-- Goal: Review the dataset, create 5 queries to analyze the data.
+-- Link: https://www.db-fiddle.com/f/saxdDCCyos6z6UdpjeEXSJ/100
+
+-- Before writing my questions and the queries, I used a  short queries to review and confirm the column layout.
+SELECT*
+FROM fortune_companies
+LIMIT 1;
+
+-- Analysis and notes: 
+
+-- 1. Which companies offer healthcare benefits and at least 20 paid time off days? 
+SELECT company_name
+FROM fortune_companies
+WHERE healthcare_benefits=1
+AND paid_time_off_days >=20;
+
+-- 2. What are the top 5 industries based on revenue, and what is their revenue per employee? (NOTE: revenue in billions)
+SELECT company_name, industry, revenue AS avg_rev_billions,
+ROUND(revenue / employees, 4)*100 AS rev_pct_per_employee_billions
+FROM fortune_companies
+ORDER BY avg_revenue_billions DESC
+LIMIT 5;
+
+-- 3. Assign all companies in the Healthcare industry as "mother friendly workplace," "acceptable," or "8 weeks or less" based on weeks of maternity leave offered.
+-- Used DESC to organize companies based on weeks of maternity leave offered from highest to lowest.
+SELECT company_name
+  CASE
+    WHEN maternity_leave_weeks >=10 THEN 'mother friendly workplace'
+    WHEN maternity_leave_weeks >=8 THEN 'acceptable'
+  ELSE 'not advisable'
+END AS maternity_leave_outlook
+FROM fortune_companies
+WHERE industry='Healthcare'
+ORDER BY maternity_leave_outlook DESC;
+
+-- 4. Which industries have an average revenue of at least 200 billion, and what are their average revenues? 
+SELECT industry, ROUND(AVG(revenue),1) AS avg_rev_billions
+FROM fortune_companies
+GROUP BY industry
+HAVING avg_rev_billions >=200
+ORDER BY avg_rev_billions DESC;
+
+-- 5. What is the average employee tenure for each industry? 
+SELECT industry, ROUND((avg_employee_tenure),1)
+FROM fortune_companies
+GROUP BY industry
+HAVING avg_rev_billions >=200
+ORDER BY avg_rev_billions DESC;
